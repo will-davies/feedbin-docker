@@ -167,7 +167,6 @@ services:
       retries: 3
 
 volumes:
-  feedbin_caddy_config:
   feedbin_minio:
   feedbin_redis:
   feedbin_db:
