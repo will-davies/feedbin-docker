@@ -71,7 +71,6 @@ services:
     environment: *feedbin-environment
     depends_on:
       - feedbin-minio
-      - feedbin-elasticsearch
       - feedbin-memcached
       - feedbin-redis
       - feedbin-postgres
