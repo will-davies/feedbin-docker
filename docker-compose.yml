@@ -71,6 +71,7 @@ services:
     environment: *feedbin-environment
     depends_on:
       - feedbin-minio
+      - feedbin-elasticsearch
       - feedbin-memcached
       - feedbin-redis
       - feedbin-postgres
@@ -88,6 +89,26 @@ services:
     environment: *feedbin-environment
     command: foreman start
     restart: unless-stopped
+
+  feedbin-elasticsearch:
+    image: elasticsearch:2.4
+    container_name: feedbin-elasticsearch
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    volumes:
+      - feedbin_elasticsearch:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
 
   feedbin-refresher:
     build: ./feedbin-refresher
@@ -169,3 +190,4 @@ volumes:
   feedbin_minio:
   feedbin_redis:
   feedbin_db:
+  feedbin_elasticsearch:
